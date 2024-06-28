@@ -9,6 +9,9 @@
 
 @interface ViewController : UIViewController
 
+@property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UIButton *recordButton; // 录音按钮
+@property (nonatomic, strong) UIButton *stopButton; // 停止按钮
 
 @end
 
