@@ -9,7 +9,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class AUPlayer;
+
+@protocol AUPlayerDelegate <NSObject>
+
+- (void)onPlayToEnd:(AUPlayer *)player;
+
+@end
+
 @interface AUPlayer : NSObject
+
+@property (nonatomic, weak) id<AUPlayerDelegate> delegate;
 
 - (void)start; // 开始录音
 - (void)stop; // 结束录音

@@ -8,6 +8,9 @@
 #import "ViewController.h"
 #import "AUPlayer.h"
 
+@interface ViewController () <AUPlayerDelegate>
+
+@end
 
 @implementation ViewController
 {
@@ -66,6 +69,8 @@
     self.stopButton.hidden = NO;
     
     player = [[AUPlayer alloc] init];
+    // AUPlayer delegate
+    player.delegate = self;
     [player start];
 }
 
@@ -76,6 +81,16 @@
     
     [player stop];
     player = nil;
+}
+
+#pragma mark - AUPlayer Delegate Method
+
+- (void)onPlayToEnd:(AUPlayer *)player
+{
+    [self recordButton];
+    player = nil;
+    self.recordButton.hidden = NO;
+    self.stopButton.hidden = YES;
 }
 
 @end
