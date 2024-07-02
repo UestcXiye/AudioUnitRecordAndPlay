@@ -147,7 +147,6 @@
     
     // output format
     AudioStreamBasicDescription outputFormat = inputFormat;
-    outputFormat.mChannelsPerFrame = 2;
     [self printAudioStreamBasicDescription:outputFormat];
     
     status = AudioUnitSetProperty(audioUnit,
@@ -231,39 +230,14 @@ OSStatus PlayCallback(void *inRefCon,
                       AudioBufferList *ioData)
 {
     AUPlayer *player = (__bridge AUPlayer *)inRefCon;
-    ioData->mNumberBuffers = 2;
-    for (int i = 0; i < ioData->mNumberBuffers; i++)
-    {
-        ioData->mBuffers[i].mNumberChannels = 1;
-        ioData->mBuffers[i].mDataByteSize = 4096;
-        ioData->mBuffers[i].mData = malloc(4096);
-    }
+
     //  人声位于左声道
-//    ioData->mBuffers[0].mNumberChannels = 1;
+    ioData->mBuffers[0].mNumberChannels = 1;
     memcpy(ioData->mBuffers[0].mData, player->audioBufferList->mBuffers[0].mData, player->audioBufferList->mBuffers[0].mDataByteSize);
     ioData->mBuffers[0].mDataByteSize = player->audioBufferList->mBuffers[0].mDataByteSize;
-    // 伴奏位于右声道
-//    ioData->mBuffers[1].mNumberChannels = 1;
-//    ioData->mBuffers[1].mDataByteSize = ioData->mBuffers[0].mDataByteSize;
-//    ioData->mBuffers[1].mData = malloc(ioData->mBuffers[1].mDataByteSize);
-    ioData->mBuffers[1].mDataByteSize = (UInt32)[player->inputSteam read:ioData->mBuffers[1].mData maxLength:ioData->mBuffers[1].mDataByteSize];
-//    NSInteger bytes = CONST_BUFFER_SIZE < ioData->mBuffers[1].mDataByteSize * 2 ? CONST_BUFFER_SIZE : ioData->mBuffers[1].mDataByteSize * 2;
-//    bytes = [player->inputSteam read:player->buffer maxLength:bytes];
-//    
-//    for (int i = 0; i < bytes; i++)
-//    {
-//        ((Byte*)ioData->mBuffers[1].mData)[i / 2] = player->buffer[i];
-//    }
-//    ioData->mBuffers[1].mDataByteSize = (UInt32)bytes / 2;
-    
-    if (ioData->mBuffers[1].mDataByteSize < ioData->mBuffers[0].mDataByteSize)
-    {
-        ioData->mBuffers[0].mDataByteSize = ioData->mBuffers[1].mDataByteSize;
-    }
     NSLog(@"output left channel buffer size: %d", ioData->mBuffers[0].mDataByteSize);
-    NSLog(@"output right channel buffer size: %d", ioData->mBuffers[1].mDataByteSize);
     
-    if (ioData->mBuffers[1].mDataByteSize <= 0)
+    if (ioData->mBuffers[0].mDataByteSize <= 0)
     {
         dispatch_async(dispatch_get_main_queue(), ^{
             [player stop];
@@ -272,6 +246,56 @@ OSStatus PlayCallback(void *inRefCon,
     
     return noErr;
 }
+
+//OSStatus PlayCallback(void *inRefCon,
+//                      AudioUnitRenderActionFlags *ioActionFlags,
+//                      const AudioTimeStamp *inTimeStamp,
+//                      UInt32 inBusNumber,
+//                      UInt32 inNumberFrames,
+//                      AudioBufferList *ioData)
+//{
+//    AUPlayer *player = (__bridge AUPlayer *)inRefCon;
+//    ioData->mNumberBuffers = 2;
+//    for (int i = 0; i < ioData->mNumberBuffers; i++)
+//    {
+//        ioData->mBuffers[i].mNumberChannels = 1;
+//        ioData->mBuffers[i].mDataByteSize = 4096;
+//        ioData->mBuffers[i].mData = malloc(4096);
+//    }
+//    //  人声位于左声道
+////    ioData->mBuffers[0].mNumberChannels = 1;
+//    memcpy(ioData->mBuffers[0].mData, player->audioBufferList->mBuffers[0].mData, player->audioBufferList->mBuffers[0].mDataByteSize);
+//    ioData->mBuffers[0].mDataByteSize = player->audioBufferList->mBuffers[0].mDataByteSize;
+//    // 伴奏位于右声道
+////    ioData->mBuffers[1].mNumberChannels = 1;
+////    ioData->mBuffers[1].mDataByteSize = ioData->mBuffers[0].mDataByteSize;
+////    ioData->mBuffers[1].mData = malloc(ioData->mBuffers[1].mDataByteSize);
+//    ioData->mBuffers[1].mDataByteSize = (UInt32)[player->inputSteam read:ioData->mBuffers[1].mData maxLength:ioData->mBuffers[1].mDataByteSize];
+////    NSInteger bytes = CONST_BUFFER_SIZE < ioData->mBuffers[1].mDataByteSize * 2 ? CONST_BUFFER_SIZE : ioData->mBuffers[1].mDataByteSize * 2;
+////    bytes = [player->inputSteam read:player->buffer maxLength:bytes];
+////
+////    for (int i = 0; i < bytes; i++)
+////    {
+////        ((Byte*)ioData->mBuffers[1].mData)[i / 2] = player->buffer[i];
+////    }
+////    ioData->mBuffers[1].mDataByteSize = (UInt32)bytes / 2;
+//    
+//    if (ioData->mBuffers[1].mDataByteSize < ioData->mBuffers[0].mDataByteSize)
+//    {
+//        ioData->mBuffers[0].mDataByteSize = ioData->mBuffers[1].mDataByteSize;
+//    }
+//    NSLog(@"output left channel buffer size: %d", ioData->mBuffers[0].mDataByteSize);
+//    NSLog(@"output right channel buffer size: %d", ioData->mBuffers[1].mDataByteSize);
+//    
+//    if (ioData->mBuffers[1].mDataByteSize <= 0)
+//    {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [player stop];
+//        });
+//    }
+//    
+//    return noErr;
+//}
 
 - (void)stop
 {
@@ -304,7 +328,8 @@ OSStatus PlayCallback(void *inRefCon,
 - (void)writePCMData:(Byte *)buffer size:(int)size
 {
     static FILE *fp = NULL;
-    NSString *path = [NSTemporaryDirectory() stringByAppendingString:@"/record.pcm"];
+    // NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingString:@"/record.pcm"];
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/record.pcm"];
     if (fp == nil)
     {
         fp = fopen(path.UTF8String, "w");
@@ -331,18 +356,18 @@ OSStatus PlayCallback(void *inRefCon,
     printf("\n");
 }
 
-//- (void)dealloc
-//{
-//    AudioOutputUnitStop(audioUnit);
-//    AudioUnitUninitialize(audioUnit);
-//    
-//    if (audioBufferList != nil)
-//    {
-//        free(audioBufferList);
-//        audioBufferList = nil;
-//    }
-//    
-//    AudioComponentInstanceDispose(audioUnit);
-//}
+- (void)dealloc
+{
+    AudioOutputUnitStop(audioUnit);
+    AudioUnitUninitialize(audioUnit);
+    
+    if (audioBufferList != nil)
+    {
+        free(audioBufferList);
+        audioBufferList = nil;
+    }
+    
+    AudioComponentInstanceDispose(audioUnit);
+}
 
 @end
