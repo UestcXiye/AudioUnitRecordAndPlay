@@ -26,7 +26,7 @@
     
     self.label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 100)];
     self.label.textColor = [UIColor blackColor];
-    self.label.text = @"使用 Audio Unit 录音、播放伴奏和耳返";
+    self.label.text = @"使用 Audio Unit 录音并播放";
     self.label.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.recordButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];

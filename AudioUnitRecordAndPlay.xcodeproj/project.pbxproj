@@ -16,7 +16,6 @@
 		163D8DC92C2E57DC002AA787 /* AudioUnitRecordAndPlayUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 163D8DC82C2E57DC002AA787 /* AudioUnitRecordAndPlayUITests.m */; };
 		163D8DCB2C2E57DC002AA787 /* AudioUnitRecordAndPlayUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 163D8DCA2C2E57DC002AA787 /* AudioUnitRecordAndPlayUITestsLaunchTests.m */; };
 		163D8DD92C2EA472002AA787 /* AUPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 163D8DD82C2EA472002AA787 /* AUPlayer.m */; };
-		16F4940D2C32E2A1004DD87B /* accompany.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 16F4940C2C32E2A1004DD87B /* accompany.pcm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,7 +52,6 @@
 		163D8DCA2C2E57DC002AA787 /* AudioUnitRecordAndPlayUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioUnitRecordAndPlayUITestsLaunchTests.m; sourceTree = "<group>"; };
 		163D8DD72C2EA472002AA787 /* AUPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AUPlayer.h; sourceTree = "<group>"; };
 		163D8DD82C2EA472002AA787 /* AUPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AUPlayer.m; sourceTree = "<group>"; };
-		16F4940C2C32E2A1004DD87B /* accompany.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = accompany.pcm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,7 +108,6 @@
 				163D8DA92C2E57DA002AA787 /* ViewController.m */,
 				163D8DD72C2EA472002AA787 /* AUPlayer.h */,
 				163D8DD82C2EA472002AA787 /* AUPlayer.m */,
-				16F4940C2C32E2A1004DD87B /* accompany.pcm */,
 				163D8DAE2C2E57DC002AA787 /* Assets.xcassets */,
 				163D8DB02C2E57DC002AA787 /* LaunchScreen.storyboard */,
 				163D8DB32C2E57DC002AA787 /* Info.plist */,
@@ -241,7 +238,6 @@
 			files = (
 				163D8DAF2C2E57DC002AA787 /* Assets.xcassets in Resources */,
 				163D8DB22C2E57DC002AA787 /* Base in Resources */,
-				16F4940D2C32E2A1004DD87B /* accompany.pcm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
